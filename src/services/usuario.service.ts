@@ -21,7 +21,7 @@ export class UsuarioService {
   }
 
   public async cadastrar(dados: CadastrarUsuarioDTO): Promise<Usuario> {
-    const alunoDB = await repository.usuario.create({
+    const usuarioDB = await repository.usuario.create({
       data: {
         name: dados.name,
         email: dados.email,
@@ -30,7 +30,7 @@ export class UsuarioService {
       },
     });
 
-    return this.mapToModel({...alunoDB});
+    return this.mapToModel({...usuarioDB});
   }
 
   private mapToModel(usuarioDB: UsuarioDB): Usuario {

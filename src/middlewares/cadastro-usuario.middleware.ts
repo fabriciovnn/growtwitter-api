@@ -11,7 +11,7 @@ export class CadastroUsuario {
       });
     }
 
-    if(!email.includes('@') || !email.inclues('.com')) {
+    if(!email.includes('@') || !email.includes('.com')) {
       return res.status(400).json({
         ok: false,
         mensagem: 'E-mail inválido!',

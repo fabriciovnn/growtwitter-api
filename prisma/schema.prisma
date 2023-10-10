@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id String @id @default(uuid()) @db.Uuid
+  name String @db.VarChar(100)
+  email String @db.VarChar(100) @unique
+  username String @db.VarChar(100) @unique
+  password String @db.Text
+  authToken String? @db.Text @map("auth_token")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  seguidores Seguidor[]
+  tweets Tweet[]
+  retweets Retweet[]
+  likes Like[]
+
+  @@map("usuario")
+}
+
+model Seguidor {
+  id String @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId String @db.Uuid @map("user_id")
+  user Usuario @relation(fields: [userId], references: [id])
+}
+
+model Tweet {
+  id String @id @default(uuid()) @db.Uuid
+  content String @db.VarChar(400)
+  type String @db.VarChar(8)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId String @db.Uuid @map("user_id")
+  user Usuario @relation(fields: [userId], references: [id])
+
+  retweets Retweet[]
+  likes Like[]
+}
+
+model Retweet {
+  id String @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId String @db.Uuid @map("user_id")
+  user Usuario @relation(fields: [userId], references: [id])
+
+  tweetId String @db.Uuid @map("tweet_id")
+  tweet Tweet @relation(fields: [tweetId], references: [id]) 
+}
+
+model Like {
+  id String @id @default(uuid()) @db.Uuid 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId String @db.Uuid @map("user_id")
+  user Usuario @relation(fields: [userId], references: [id])
+
+  tweetId String @db.Uuid @map("tweet_id")
+  tweet Tweet @relation(fields: [tweetId], references: [id]) 
+}

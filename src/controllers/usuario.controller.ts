@@ -36,4 +36,27 @@ export class UsuarioController {
       dados: novoUsuario.toJSON(),
     });
   }
+
+  public async login(req: Request, res: Response) {
+    const { username, password } = req.body;
+
+    const service = new UsuarioService();
+
+    const token = await service.login({ username, password})
+
+    if(!token) {
+      res.status(401).json({
+        ok: false,
+        mensagem: 'Credenciais inválidas'
+      })
+    }
+
+    return res.status(200).json({
+      ok: true,
+      mensagem: 'Login efetuado',
+      dados: {
+        token: token
+      }
+    })
+  }
 }

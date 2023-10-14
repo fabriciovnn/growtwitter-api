@@ -42,6 +42,7 @@ export class UsuarioService {
       }
     });
 
+
     if(!alunoEncontrado) return null
 
     const token = randomUUID();

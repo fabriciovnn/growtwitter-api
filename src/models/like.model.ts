@@ -2,15 +2,15 @@
 export class Like {
   constructor(
     private _id: string,
-    private _userId: string,
     private _tweetId: string,
+    private _userId: string,
   ) {}
 
   public toJSON() {
     return {
       id: this._id,
-      userId: this._userId,
-      tweetId: this._tweetId
+      tweetId: this._tweetId,
+      userId: this._userId
     }
   }
     

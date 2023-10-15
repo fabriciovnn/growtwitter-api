@@ -1,7 +1,8 @@
-import { CadastrarTweetDTO } from "../dtos/cadastrar-tweet.dto";
+
 import { Tweet } from "../models";
 import {Tweet as TweetDB} from '@prisma/client'
 import repository from "../repositories/prisma.connection";
+import { CadastrarTweetDTO } from "../dtos";
 
 export class TweetService {
 
@@ -15,6 +16,14 @@ export class TweetService {
     })
 
     return this.mapToModel({...tweetDB})
+  }
+
+  public async verificarTweetExistente(id: string): Promise<boolean>{
+    const tweetExiste = await repository.tweet.findUnique({
+      where: {id}
+    });
+
+    return !!tweetExiste
   }
 
   private mapToModel(tweetDB: TweetDB): Tweet{

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UsuarioService } from "../services";
+import { TweetService, UsuarioService } from "../services";
 
 export class UsuarioController {
   public async create(req: Request, res: Response) {
@@ -58,5 +58,25 @@ export class UsuarioController {
         token: token
       }
     })
+  }
+
+  public async createTweet(req: Request, res: Response) {
+    const { content, type, userId } = req.body
+
+    const serviceTweet = new TweetService();
+
+    const novoTweet = await serviceTweet.cadastrar({
+      content,
+      type,
+      userId
+    });
+
+    return res.status(201).json({
+      ok: true,
+      mensagem: 'Tweet enviado com sucesso',
+      dados: novoTweet.toJSON(),
+    })
+    
+    
   }
 }

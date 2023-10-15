@@ -3,6 +3,7 @@ import { Usuario } from "../models";
 import { Usuario as UsuarioDB} from '@prisma/client'
 import repository from "../repositories/prisma.connection";
 import { randomUUID } from "crypto";
+import { CadastrarTweetDTO } from "../dtos/cadastrar-tweet.dto";
 
 export class UsuarioService {
   public async verificarEmailExistente(email: string): Promise<boolean> {
@@ -55,6 +56,16 @@ export class UsuarioService {
     });
 
     return token;
+  }
+
+  public async validarToken(token: string): Promise<Usuario | undefined> {
+    const usuarioDB = await repository.usuario.findFirst({
+      where: { authToken: token}
+    })
+
+    if(!usuarioDB) return undefined;
+
+    return this.mapToModel(usuarioDB);
   }
 
   private mapToModel(usuarioDB: UsuarioDB): Usuario {

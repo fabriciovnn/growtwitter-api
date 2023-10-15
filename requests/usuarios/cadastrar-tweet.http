@@ -1,0 +1,8 @@
+POST http://localhost:8080/usuarios/tweets HTTP/1.1
+Authorization: 7e67da42-1960-4393-a66f-16e0e830b47a
+Content-Type: application/json
+
+{
+  "content": "Hello World",
+  "type": "tweet"
+}

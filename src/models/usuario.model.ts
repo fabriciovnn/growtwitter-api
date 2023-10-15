@@ -1,34 +1,40 @@
+import { Like } from "./like.model";
+import { Tweet } from "./tweet.model";
 
 export class Usuario {
+  private _seguidores: Usuario[];
+  private _tweets: Tweet[];
+  private _retweets: Tweet[];
+  private _likes: Like[];
   constructor(
     private _id: string,
     private _name: string,
     private _email: string,
     private _username: string,
     private _password: string,
-  ) {}
+  ) {
+    this._seguidores = []
+    this._tweets = []
+    this._retweets = []
+    this._likes = []
+  }
 
+  public get seguidores() : Usuario[] {
+    return this._seguidores
+  }
   
-  public get id() : string {
-    return this._id;
+  public get tweets() : Tweet[] {
+    return this._tweets
   }
 
-  public get name() : string {
-    return this._name;
+  public get retweets() : Tweet[] {
+    return this._retweets
   }
 
-  public get email() : string {
-    return this._email;
+  public get likes() : Like[] {
+    return this._likes
   }
-
-  public get username() : string {
-    return this._username;
-  }
-
-  public get password() : string {
-    return this._password;
-  }
-
+  
   public toJSON() {
     return {
       id: this._id,

@@ -1,99 +1,38 @@
 import { Request, Response } from "express";
-import { LikeService, TweetService, UsuarioService } from "../services";
+import { TweetService, UsuarioService } from "../services";
 
 export class UsuarioController {
   public async create(req: Request, res: Response) {
-    const { name, email, username, password} = req.body
-    const service = new UsuarioService();
+    try {
+      const { name, email, username, password } = req.body
+      const service = new UsuarioService();
 
-    const emailExiste = await service.verificarEmailExistente(email);
-    const usernameExiste = await service.verificarUsernameExistente(username);
+      const response = await service.cadastrar({name, email, username, password});
 
-    if(emailExiste) {
-      return res.status(400).json({
+      return res.status(response.code).json(response);
+    } catch (error: any) {
+      return res.status(500).json({
+        code: 500,
         ok: false,
-        mensagem: 'E-mail já cadastrado',
-      });
+        mensagem: error.toString(),
+      })   
     }
-
-    if(usernameExiste) {
-      return res.status(400).json({
-        ok: false,
-        mensagem: 'Username já existe'
-      });
-    }
-
-    const novoUsuario = await service.cadastrar({
-      name,
-      email,
-      username,
-      password
-    });
-
-    return res.status(201).json({
-      ok: true,
-      mensagem: 'Usuario cadastrado!',
-      dados: novoUsuario.toJSON(),
-    });
   }
 
   public async login(req: Request, res: Response) {
-    const { username, password } = req.body;
+    try {
+      const { email, password } = req.body;
+      const service = new UsuarioService();
+  
+      const response = await service.login({ email, password});
 
-    const service = new UsuarioService();
-
-    const token = await service.login({ username, password})
-
-    if(!token) {
-      res.status(401).json({
+      return res.status(response.code).json(response);
+    } catch (error: any) {
+      return res.status(500).json({
+        code: 500,
         ok: false,
-        mensagem: 'Credenciais inválidas'
-      })
+        mensagem: error.toString(),
+      });
     }
-
-    return res.status(200).json({
-      ok: true,
-      mensagem: 'Login efetuado',
-      dados: {
-        token: token
-      }
-    })
-  }
-
-  public async createTweet(req: Request, res: Response) {
-    const { content, type, userId } = req.body
-
-    const service = new TweetService();
-
-    const novoTweet = await service.cadastrar({
-      content,
-      type,
-      userId
-    });
-
-    return res.status(201).json({
-      ok: true,
-      mensagem: 'Tweet enviado com sucesso',
-      dados: novoTweet.toJSON(),
-    })
-    
-  }
-
-  public async createLike(req: Request, res: Response) {
-    const {tweetId, userId} = req.body
-
-    const service = new LikeService();
-
-    const novoLike = await service.cadastrar({
-      tweetId,
-      userId
-    })
-
-    return res.status(201).json({
-      ok: true,
-      mensagem: 'Like criado com sucesso',
-      dados: novoLike.toJSON
-    })
-
   }
 }

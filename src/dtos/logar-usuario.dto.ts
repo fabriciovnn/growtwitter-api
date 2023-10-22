@@ -1,4 +1,4 @@
 export interface LogarUsuarioDTO {
-  username: string;
+  email: string;
   password: string;
 }

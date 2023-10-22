@@ -6,20 +6,15 @@ export class CadastroUsuario {
 
     if(!name || !email || !username || !password) {
       return res.status(400).json({
+        code: 400,
         ok: false,
         mensagem: 'É obrigatório informar os campos: name, email, username e password',
       });
     }
 
-    if(!email.includes('@') || !email.includes('.com')) {
-      return res.status(400).json({
-        ok: false,
-        mensagem: 'E-mail inválido!',
-      });
-    }
-
     if(password.length < 8) {
       return res.status(400).json({
+        code: 400,
         ok: false,
         mensagem: 'É necessário informar o mínimo de 8 caracteres para password'
       });

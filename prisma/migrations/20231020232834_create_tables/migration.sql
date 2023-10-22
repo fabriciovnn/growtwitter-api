@@ -13,36 +13,15 @@ CREATE TABLE "usuario" (
 );
 
 -- CreateTable
-CREATE TABLE "Seguidor" (
-    "id" UUID NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-    "user_id" UUID NOT NULL,
-
-    CONSTRAINT "Seguidor_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Tweet" (
     "id" UUID NOT NULL,
     "content" VARCHAR(400) NOT NULL,
-    "type" VARCHAR(8) NOT NULL,
+    "type" CHAR(1) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "user_id" UUID NOT NULL,
 
     CONSTRAINT "Tweet_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Retweet" (
-    "id" UUID NOT NULL,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-    "user_id" UUID NOT NULL,
-    "tweet_id" UUID NOT NULL,
-
-    CONSTRAINT "Retweet_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -63,16 +42,7 @@ CREATE UNIQUE INDEX "usuario_email_key" ON "usuario"("email");
 CREATE UNIQUE INDEX "usuario_username_key" ON "usuario"("username");
 
 -- AddForeignKey
-ALTER TABLE "Seguidor" ADD CONSTRAINT "Seguidor_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Tweet" ADD CONSTRAINT "Tweet_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Retweet" ADD CONSTRAINT "Retweet_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Retweet" ADD CONSTRAINT "Retweet_tweet_id_fkey" FOREIGN KEY ("tweet_id") REFERENCES "Tweet"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Like" ADD CONSTRAINT "Like_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -2,16 +2,27 @@
 export class Like {
   constructor(
     private _id: string,
-    private _tweetId: string,
     private _userId: string,
+    private _tweetId: string
   ) {}
+  
+  public get id() : string {
+    return this._id;
+  }
+
+  public get userId() : string {
+    return this._userId;
+  }
+
+  public get tweetId() : string {
+    return this._tweetId;
+  }
 
   public toJSON() {
     return {
       id: this._id,
-      tweetId: this._tweetId,
-      userId: this._userId
+      userId: this._userId,
+      tweetId: this._tweetId
     }
   }
-    
 }

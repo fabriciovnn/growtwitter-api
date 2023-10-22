@@ -2,28 +2,67 @@
 import { Tweet } from "../models";
 import {Tweet as TweetDB} from '@prisma/client'
 import repository from "../repositories/prisma.connection";
-import { CadastrarTweetDTO } from "../dtos";
+import { CadastrarTweetDTO, ResponseDTO } from "../dtos";
 
 export class TweetService {
 
-  public async cadastrar(dados: CadastrarTweetDTO): Promise<Tweet> {
-    const tweetDB = await repository.tweet.create({
+  public async cadastrar(dados: CadastrarTweetDTO): Promise<ResponseDTO> {
+    const novoTweet = await repository.tweet.create({
       data: {
         content: dados.content,
         type: dados.type,
         userId: dados.userId
-      }
-    })
-
-    return this.mapToModel({...tweetDB})
-  }
-
-  public async verificarTweetExistente(id: string): Promise<boolean>{
-    const tweetExiste = await repository.tweet.findUnique({
-      where: {id}
+      },
     });
 
-    return !!tweetExiste
+    return {
+      code: 201,
+      ok: true,
+      mensagem: 'Tweet cadastrado com sucesso',
+      dados: this.mapToModel(novoTweet),
+    }
+  }
+
+  public async listarTodos(user: string | undefined): Promise<ResponseDTO> {
+    const tweets = await repository.tweet.findMany({
+      where: { userId: user,},
+    });
+
+    if(!tweets.length) {
+      return {
+        code: 404,
+        ok: false,
+        mensagem: 'Não foram encontrados tweets',
+      };
+    }
+
+    return {
+      code: 200,
+      ok: true,
+      mensagem: 'Tweets listados com sucesso',
+      dados: tweets.map((t) => this.mapToModel(t)),
+    }
+  }
+
+  public async listarPorId(id: string): Promise<ResponseDTO> {
+    const tweetEncontrado = await repository.tweet.findFirst({
+      where: { id },
+    });
+
+    if(!tweetEncontrado) {
+      return {
+        code: 404,
+        ok: false,
+        mensagem: 'Tweet não encontrado',
+      };
+    }
+
+    return {
+      code: 200,
+      ok: true,
+      mensagem: 'Tweet encontrado com sucesso',
+      dados: this.mapToModel(tweetEncontrado)
+    }
   }
 
   private mapToModel(tweetDB: TweetDB): Tweet{

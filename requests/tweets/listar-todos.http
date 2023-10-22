@@ -1,0 +1,2 @@
+GET http://localhost:8080/tweets/ HTTP/1.1
+Authorization: 26ce385c-5709-4897-b5e1-4fedd9eea761

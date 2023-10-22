@@ -7,22 +7,24 @@ export class Auth {
 
     if(!token) {
       return res.status(401).json({
+        code: 401,
         ok: false,
-        mensagem: 'Token é obrigatório'
+        mensagem: 'Token é obrigatório',
       })
     }
 
     const service = new UsuarioService();
-    const usuarioEncontrado = await service.validarToken(token);
+    const usuarioAutenticado = await service.validarToken(token);
 
-    if(!usuarioEncontrado) {
+    if(!usuarioAutenticado) {
       return res.status(401).json({
+        code: 401,
         ok: false,
-        mensagem: 'Token inválido'
+        mensagem: 'Token inválido',
       })
     }
 
-    req.body.userId = usuarioEncontrado.toJSON().id;
+    req.body.userId = usuarioAutenticado;
 
     return next();
   }

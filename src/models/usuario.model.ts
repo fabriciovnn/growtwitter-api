@@ -2,10 +2,9 @@ import { Like } from "./like.model";
 import { Tweet } from "./tweet.model";
 
 export class Usuario {
-  private _seguidores: Usuario[];
   private _tweets: Tweet[];
-  private _retweets: Tweet[];
   private _likes: Like[];
+  
   constructor(
     private _id: string,
     private _name: string,
@@ -13,22 +12,32 @@ export class Usuario {
     private _username: string,
     private _password: string,
   ) {
-    this._seguidores = []
     this._tweets = []
-    this._retweets = []
     this._likes = []
   }
 
-  public get seguidores() : Usuario[] {
-    return this._seguidores
+  public get id() : string {
+    return this._id;
+  }
+
+  public get name() : string {
+    return this._name;
+  }
+
+  public get email() : string {
+    return this._email;
+  }
+
+  public get username() : string {
+    return this._username;
+  }
+  
+  public get password() : string {
+    return this._password;
   }
   
   public get tweets() : Tweet[] {
     return this._tweets
-  }
-
-  public get retweets() : Tweet[] {
-    return this._retweets
   }
 
   public get likes() : Like[] {

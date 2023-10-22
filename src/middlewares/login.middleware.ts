@@ -2,13 +2,14 @@ import { NextFunction, Request, Response } from "express";
 
 export class login {
   public validar(req: Request, res: Response, next: NextFunction) {
-    const { username, password} = req.body
+    const { email, password} = req.body
 
-    if(!username || !password) {
+    if(!email || !password) {
       return res.status(400).json({
+        code: 400,
         ok: false,
-        mensagem: 'Necessário informar username e password para efetuar o login!'
-      })
+        mensagem: 'Faltam campos',
+      });
     }
 
     return next();

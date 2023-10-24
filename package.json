@@ -26,5 +26,8 @@
     "start": "node ./dist/server.js",
     "postinstall": "prisma generate",
     "prisma:deploy": "prisma migrate deploy"
+  },
+  "engines": {
+    "node": "18"
   }
 }

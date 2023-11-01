@@ -1,31 +1,20 @@
 import { CadastrarUsuarioDTO, LogarUsuarioDTO, ResponseDTO } from "../dtos";
 import { Usuario } from "../models";
-import { Usuario as UsuarioDB} from '@prisma/client'
+import { Usuario as UsuarioDB } from "@prisma/client";
 import repository from "../repositories/prisma.connection";
 import { randomUUID } from "crypto";
 
 export class UsuarioService {
   public async cadastrar(dados: CadastrarUsuarioDTO): Promise<ResponseDTO> {
-    const emailExiste = await repository.usuario.findUnique({
-      where: { email: dados.email }});
-    
-    if(emailExiste) {
+    const usuarioExiste = await repository.usuario.findFirst({
+      where: { OR: [{ email: dados.email }, { username: dados.username }] },
+    });
+
+    if (usuarioExiste) {
       return {
         code: 400,
         ok: false,
-        mensagem: 'E-mail já cadastrado',
-      }
-    }
-
-    const usernameExiste = await repository.usuario.findUnique({
-      where: {username: dados.username}
-    })
-
-    if(usernameExiste) {
-      return {
-        code: 400,
-        ok: false,
-        mensagem: 'Username já cadastrado'
+        mensagem: "E-mail e/ou username já cadastrado",
       };
     }
 
@@ -34,31 +23,29 @@ export class UsuarioService {
         name: dados.name,
         email: dados.email,
         username: dados.username,
-        password: dados.password
+        password: dados.password,
+        imgUrl: dados.imgUrl,
       },
     });
 
     return {
       code: 201,
       ok: true,
-      mensagem: 'Usuário cadastrado!',
-      dados: this.mapToModel({...usuarioDB})
+      mensagem: "Usuário cadastrado!",
+      dados: this.mapToModel(usuarioDB),
     };
   }
 
-  public async login(dados: LogarUsuarioDTO): Promise<ResponseDTO>{
-    const usuarioEncontrado = await repository.usuario.findUnique({
-      where: {
-        email: dados.email,
-        password: dados.password,
-      }
+  public async login(dados: LogarUsuarioDTO): Promise<ResponseDTO> {
+    const usuarioEncontrado = await repository.usuario.findFirst({
+      where: { AND: [{ email: dados.email }, { password: dados.password }] },
     });
 
-    if(!usuarioEncontrado) {
+    if (!usuarioEncontrado) {
       return {
         code: 401,
         ok: false,
-        mensagem: 'Credenciais inválidas',
+        mensagem: "Credenciais inválidas",
       };
     }
 
@@ -66,23 +53,23 @@ export class UsuarioService {
 
     await repository.usuario.update({
       where: { id: usuarioEncontrado.id },
-      data: { authToken: token},
+      data: { authToken: token },
     });
 
     return {
       code: 200,
       ok: true,
-      mensagem: 'Login efetuado',
-      dados: { token },
+      mensagem: "Login efetuado",
+      dados: { token, user: this.mapToModel(usuarioEncontrado) },
     };
   }
 
   public async validarToken(token: string): Promise<String | null> {
     const usuarioEncontrado = await repository.usuario.findFirst({
-      where: { authToken: token}
-    })
+      where: { authToken: token },
+    });
 
-    if(!usuarioEncontrado) return null;
+    if (!usuarioEncontrado) return null;
 
     return usuarioEncontrado.id;
   }
@@ -93,7 +80,8 @@ export class UsuarioService {
       usuarioDB.name,
       usuarioDB.email,
       usuarioDB.username,
-      usuarioDB.password
+      usuarioDB.password,
+      usuarioDB.imgUrl || undefined
     );
   }
 }

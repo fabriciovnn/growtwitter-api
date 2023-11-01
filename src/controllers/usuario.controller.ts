@@ -4,10 +4,16 @@ import { TweetService, UsuarioService } from "../services";
 export class UsuarioController {
   public async create(req: Request, res: Response) {
     try {
-      const { name, email, username, password } = req.body
+      const { name, email, username, password, imgUrl } = req.body;
       const service = new UsuarioService();
 
-      const response = await service.cadastrar({name, email, username, password});
+      const response = await service.cadastrar({
+        name,
+        email,
+        username,
+        password,
+        imgUrl,
+      });
 
       return res.status(response.code).json(response);
     } catch (error: any) {
@@ -15,7 +21,7 @@ export class UsuarioController {
         code: 500,
         ok: false,
         mensagem: error.toString(),
-      })   
+      });
     }
   }
 
@@ -23,8 +29,8 @@ export class UsuarioController {
     try {
       const { email, password } = req.body;
       const service = new UsuarioService();
-  
-      const response = await service.login({ email, password});
+
+      const response = await service.login({ email, password });
 
       return res.status(response.code).json(response);
     } catch (error: any) {

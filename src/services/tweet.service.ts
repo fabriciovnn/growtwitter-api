@@ -40,17 +40,18 @@ export class TweetService {
       };
     }
 
-    let like = false;
-
     const tweetsComLikes = [];
     for (const tweet of tweets) {
+      let like;
       const totalLikes = await repository.like.count({
         where: { tweetId: tweet.id },
       });
 
-      const like = await repository.like.findFirst({
-        where: { AND: [{ userId: user }, { tweetId: tweet.id }] },
-      });
+      if (user) {
+        like = await repository.like.findFirst({
+          where: { AND: [{ userId: user }, { tweetId: tweet.id }] },
+        });
+      }
 
       const tweetComCount = { ...tweet, totalLikes, like: !!like };
       tweetsComLikes.push(tweetComCount);

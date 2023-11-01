@@ -1,7 +1,11 @@
-import { Tweet } from "../models";
-import { Tweet as TweetDB } from "@prisma/client";
+import { Tweet, Usuario } from "../models";
+import { Tweet as TweetDB, Usuario as UsuarioDB } from "@prisma/client";
 import repository from "../repositories/prisma.connection";
 import { CadastrarTweetDTO, ResponseDTO } from "../dtos";
+
+interface TweetWithRelationsUser extends TweetDB {
+  user: UsuarioDB;
+}
 
 export class TweetService {
   public async cadastrar(dados: CadastrarTweetDTO): Promise<ResponseDTO> {
@@ -11,6 +15,7 @@ export class TweetService {
         type: dados.type,
         userId: dados.userId,
       },
+      include: { user: true },
     });
 
     return {
@@ -24,6 +29,7 @@ export class TweetService {
   public async listarTodos(user: string | undefined): Promise<ResponseDTO> {
     const tweets = await repository.tweet.findMany({
       where: { userId: user },
+      include: { user: true },
     });
 
     if (!tweets.length) {
@@ -33,12 +39,20 @@ export class TweetService {
         mensagem: "Não foram encontrados tweets",
       };
     }
+
+    let like = false;
+
     const tweetsComLikes = [];
     for (const tweet of tweets) {
       const totalLikes = await repository.like.count({
         where: { tweetId: tweet.id },
       });
-      const tweetComCount = { ...tweet, totalLikes };
+
+      const like = await repository.like.findFirst({
+        where: { AND: [{ userId: user }, { tweetId: tweet.id }] },
+      });
+
+      const tweetComCount = { ...tweet, totalLikes, like: !!like };
       tweetsComLikes.push(tweetComCount);
     }
 
@@ -46,13 +60,20 @@ export class TweetService {
       code: 200,
       ok: true,
       mensagem: "Tweets listados com sucesso",
-      dados: tweetsComLikes,
+      dados: tweetsComLikes.map((item) => {
+        return {
+          ...this.mapToModel(item),
+          totalLikes: item.totalLikes,
+          like: item.like,
+        };
+      }),
     };
   }
 
   public async listarPorId(id: string): Promise<ResponseDTO> {
     const tweetEncontrado = await repository.tweet.findFirst({
       where: { id },
+      include: { user: true },
     });
 
     if (!tweetEncontrado) {
@@ -71,7 +92,21 @@ export class TweetService {
     };
   }
 
-  private mapToModel(tweetDB: TweetDB): Tweet {
-    return new Tweet(tweetDB.id, tweetDB.content, tweetDB.type, tweetDB.userId);
+  private mapToModel(tweetDB: TweetWithRelationsUser) {
+    const user = new Usuario(
+      tweetDB.user.id,
+      tweetDB.user.name,
+      tweetDB.user.email,
+      tweetDB.user.username,
+      tweetDB.user.password,
+      tweetDB.user.imgUrl || undefined
+    );
+    const tweet = new Tweet(
+      tweetDB.id,
+      tweetDB.content,
+      tweetDB.type,
+      tweetDB.userId
+    );
+    return { ...tweet.toJSON(), user: user.toJSON() };
   }
 }

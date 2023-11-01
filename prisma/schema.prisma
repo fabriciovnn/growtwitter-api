@@ -35,6 +35,8 @@ model Tweet {
   user Usuario @relation(fields: [userId], references: [id])
 
   likes Like[]
+
+  @@map("tweet")
 }
 
 model Like {
@@ -47,4 +49,6 @@ model Like {
 
   tweetId String @db.Uuid @map("tweet_id")
   tweet Tweet @relation(fields: [tweetId], references: [id]) 
+
+  @@map("like")
 }

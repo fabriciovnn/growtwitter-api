@@ -1,8 +1,8 @@
+import { Usuario as UsuarioDB } from "@prisma/client";
+import { randomUUID } from "crypto";
 import { CadastrarUsuarioDTO, LogarUsuarioDTO, ResponseDTO } from "../dtos";
 import { Usuario } from "../models";
-import { Usuario as UsuarioDB } from "@prisma/client";
 import repository from "../repositories/prisma.connection";
-import { randomUUID } from "crypto";
 
 export class UsuarioService {
   public async cadastrar(dados: CadastrarUsuarioDTO): Promise<ResponseDTO> {
@@ -62,16 +62,6 @@ export class UsuarioService {
       mensagem: "Login efetuado",
       dados: { token, user: this.mapToModel(usuarioEncontrado) },
     };
-  }
-
-  public async validarToken(token: string): Promise<String | null> {
-    const usuarioEncontrado = await repository.usuario.findFirst({
-      where: { authToken: token },
-    });
-
-    if (!usuarioEncontrado) return null;
-
-    return usuarioEncontrado.id;
   }
 
   private mapToModel(usuarioDB: UsuarioDB): Usuario {

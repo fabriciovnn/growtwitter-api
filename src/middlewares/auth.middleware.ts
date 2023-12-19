@@ -1,31 +1,34 @@
 import { NextFunction, Request, Response } from "express";
-import { UsuarioService } from "../services";
+import { JWTAdapter } from "../adapters";
+import { envs } from "../envs";
 
 export class Auth {
   public async validar(req: Request, res: Response, next: NextFunction) {
-    const token = req.headers.authorization
+    const auth = req.headers.authorization;
 
-    if(!token) {
+    if (!auth) {
       return res.status(401).json({
         code: 401,
         ok: false,
-        mensagem: 'Token é obrigatório',
-      })
+        mensagem: "Token é obrigatório",
+      });
     }
 
-    const service = new UsuarioService();
-    const usuarioAutenticado = await service.validarToken(token);
+    const token = auth.split(" ")[1];
 
-    if(!usuarioAutenticado) {
-      return res.status(401).json({
-        code: 401,
-        ok: false,
-        mensagem: 'Token inválido',
-      })
-    }
+    try {
+      const jwt = new JWTAdapter(envs.JWT_SECRET_KEY, envs.JWT_EXPIRE_IN);
+      const usuarioAutenticado = jwt.decodificarToken(token);
 
-    req.body.userId = usuarioAutenticado;
-
-    return next();
+      if (!usuarioAutenticado) {
+        return res.status(401).json({
+          code: 401,
+          ok: false,
+          mensagem: "Token inválido",
+        });
+      }
+      req.usuario = usuarioAutenticado;
+      return next();
+    } catch (error) {}
   }
 }

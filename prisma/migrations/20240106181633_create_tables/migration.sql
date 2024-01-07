@@ -1,24 +1,16 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "usuario" (
+    "id" UUID NOT NULL,
+    "name" VARCHAR(100) NOT NULL,
+    "email" VARCHAR(100) NOT NULL,
+    "username" VARCHAR(100) NOT NULL,
+    "password" TEXT NOT NULL,
+    "img_url" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
-  - You are about to drop the `Like` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Tweet` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE "Like" DROP CONSTRAINT "Like_tweet_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "Like" DROP CONSTRAINT "Like_user_id_fkey";
-
--- DropForeignKey
-ALTER TABLE "Tweet" DROP CONSTRAINT "Tweet_user_id_fkey";
-
--- DropTable
-DROP TABLE "Like";
-
--- DropTable
-DROP TABLE "Tweet";
+    CONSTRAINT "usuario_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "tweet" (
@@ -42,6 +34,12 @@ CREATE TABLE "like" (
 
     CONSTRAINT "like_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "usuario_email_key" ON "usuario"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "usuario_username_key" ON "usuario"("username");
 
 -- AddForeignKey
 ALTER TABLE "tweet" ADD CONSTRAINT "tweet_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "usuario"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

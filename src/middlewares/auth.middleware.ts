@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { JsonWebTokenError } from "jsonwebtoken";
 import { JWTAdapter } from "../adapters";
 import { envs } from "../envs";
 
@@ -27,8 +28,23 @@ export class Auth {
           mensagem: "Token inválido",
         });
       }
+
       req.usuario = usuarioAutenticado;
       return next();
-    } catch (error) {}
+    } catch (error: any) {
+      if (error instanceof JsonWebTokenError) {
+        return res.status(401).json({
+          code: 401,
+          ok: false,
+          mensagem: "Token inválido ou expirado",
+        });
+      }
+
+      return res.status(500).json({
+        code: 500,
+        ok: false,
+        mensagem: "Ops! Deu algo errado no servidor",
+      });
+    }
   }
 }

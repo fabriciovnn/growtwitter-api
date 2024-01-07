@@ -13,7 +13,6 @@ model Usuario {
   email String @db.VarChar(100) @unique
   username String @db.VarChar(100) @unique
   password String @db.Text
-  authToken String? @db.Text @map("auth_token")
   imgUrl String? @db.Text @map("img_url")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

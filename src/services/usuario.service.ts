@@ -1,6 +1,7 @@
 import { Usuario as UsuarioDB } from "@prisma/client";
-import { randomUUID } from "crypto";
+import { BcryptAdapter, JWTAdapter } from "../adapters";
 import { CadastrarUsuarioDTO, LogarUsuarioDTO, ResponseDTO } from "../dtos";
+import { envs } from "../envs";
 import { Usuario } from "../models";
 import repository from "../repositories/prisma.connection";
 
@@ -18,12 +19,15 @@ export class UsuarioService {
       };
     }
 
+    const bcrypt = new BcryptAdapter(Number(envs.BCRYPT_SALT));
+    const hash = await bcrypt.gerarHash(dados.password);
+
     const usuarioDB = await repository.usuario.create({
       data: {
         name: dados.name,
         email: dados.email,
         username: dados.username,
-        password: dados.password,
+        password: hash,
         imgUrl: dados.imgUrl,
       },
     });
@@ -38,7 +42,7 @@ export class UsuarioService {
 
   public async login(dados: LogarUsuarioDTO): Promise<ResponseDTO> {
     const usuarioEncontrado = await repository.usuario.findFirst({
-      where: { AND: [{ email: dados.email }, { password: dados.password }] },
+      where: { email: dados.email },
     });
 
     if (!usuarioEncontrado) {
@@ -49,18 +53,29 @@ export class UsuarioService {
       };
     }
 
-    const token = randomUUID();
+    const bcrypt = new BcryptAdapter(Number(envs.BCRYPT_SALT));
+    const corresponde = await bcrypt.compararHash(
+      dados.password,
+      usuarioEncontrado.password
+    );
 
-    await repository.usuario.update({
-      where: { id: usuarioEncontrado.id },
-      data: { authToken: token },
-    });
+    if (!corresponde) {
+      return {
+        code: 401,
+        ok: false,
+        mensagem: "Credenciais inválidas",
+      };
+    }
+
+    const usuarioModel = this.mapToModel(usuarioEncontrado);
+    const jwt = new JWTAdapter(envs.JWT_SECRET_KEY, envs.JWT_EXPIRE_IN);
+    const token = jwt.gerarToken(usuarioModel.toJSON());
 
     return {
       code: 200,
       ok: true,
       mensagem: "Login efetuado",
-      dados: { token, user: this.mapToModel(usuarioEncontrado) },
+      dados: { token, user: usuarioModel },
     };
   }
 

@@ -1,8 +1,8 @@
 POST http://localhost:8080/tweets HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM1ZDdmMDMwLTAxNDQtNDY0Ny1iNzcxLTNhYmUyYzIzMWVlZCIsIm5hbWUiOiJ0ZXN0ZTIiLCJlbWFpbCI6InRlc3RlMkB0ZXN0ZS5jb20iLCJ1c2VybmFtZSI6InRlc3RlMiIsImlhdCI6MTcwNTEwNzEwMSwiZXhwIjoxNzA1MTEwNzAxfQ.rJktETcrlTl1xf4zayWjL_juyWym3hec1P5FY1UirOk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM1ZDdmMDMwLTAxNDQtNDY0Ny1iNzcxLTNhYmUyYzIzMWVlZCIsIm5hbWUiOiJ0ZXN0ZTIiLCJlbWFpbCI6InRlc3RlMkB0ZXN0ZS5jb20iLCJ1c2VybmFtZSI6InRlc3RlMiIsImlhdCI6MTcwNTE0ODQ4NCwiZXhwIjoxNzA1MTUyMDg0fQ.PmWbUcQCzaT3ZDKUGBzaOPa3c-oocFKIApMZNVX4om0
 
 {
-    "content": "Hello Friend",
-    "type": "t"
+    "content": "Olá Mundo",
+    "type": "r"
 }

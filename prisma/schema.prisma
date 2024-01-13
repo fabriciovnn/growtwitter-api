@@ -19,6 +19,9 @@ model Usuario {
 
   tweets Tweet[]
   likes Like[]
+  retweets Retweet[]
+  followers Follower[] @relation("userId")
+  follow Follower[] @relation("followerId")
 
   @@map("usuario")
 }
@@ -34,6 +37,7 @@ model Tweet {
   user Usuario @relation(fields: [userId], references: [id])
 
   likes Like[]
+  retweets Retweet[]
 
   @@map("tweet")
 }
@@ -46,8 +50,44 @@ model Like {
   userId String @db.Uuid @map("user_id")
   user Usuario @relation(fields: [userId], references: [id])
 
-  tweetId String @db.Uuid @map("tweet_id")
-  tweet Tweet @relation(fields: [tweetId], references: [id]) 
+  tweetId String? @db.Uuid @map("tweet_id")
+  tweet Tweet? @relation(fields: [tweetId], references: [id]) 
+
+  retweetId String? @db.Uuid @map("retweet_id")
+  retweet Retweet? @relation(fields: [retweetId], references: [id])
+
 
   @@map("like")
+}
+
+model Retweet {
+  id String @id @default(uuid()) @db.Uuid
+  content String @db.VarChar(400)
+  type String @db.Char(1)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tweetId String @db.Uuid @map("tweet_id")
+  tweet Tweet @relation(fields: [tweetId], references: [id])
+
+  userId String @db.Uuid @map("user_id")
+  user Usuario @relation(fields: [userId], references: [id])
+
+  likes Like[]
+
+  @@map("retweet")
+}
+
+model Follower {
+  id String @id @default(uuid()) @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId String @db.Uuid @map("user_id")
+  user Usuario @relation("userId" ,fields: [userId], references: [id])
+
+  followerId String @db.Uuid @map("follower_id")
+  follower Usuario @relation("followerId" ,fields: [followerId], references: [id])
+
+  @@map("follower")
 }

@@ -1,8 +1,8 @@
 POST http://localhost:8080/tweets HTTP/1.1
 content-type: application/json
-Authorization: dc9b27ca-2ddb-4795-849a-c9ed55d4db62
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImM1ZDdmMDMwLTAxNDQtNDY0Ny1iNzcxLTNhYmUyYzIzMWVlZCIsIm5hbWUiOiJ0ZXN0ZTIiLCJlbWFpbCI6InRlc3RlMkB0ZXN0ZS5jb20iLCJ1c2VybmFtZSI6InRlc3RlMiIsImlhdCI6MTcwNTEwNzEwMSwiZXhwIjoxNzA1MTEwNzAxfQ.rJktETcrlTl1xf4zayWjL_juyWym3hec1P5FY1UirOk
 
 {
-    "content": "segundo tweet!",
+    "content": "Hello Friend",
     "type": "t"
 }

@@ -1,7 +1,7 @@
-import { Tweet, Usuario } from "../models";
 import { Tweet as TweetDB, Usuario as UsuarioDB } from "@prisma/client";
-import repository from "../repositories/prisma.connection";
 import { CadastrarTweetDTO, ResponseDTO } from "../dtos";
+import { Tweet, Usuario } from "../models";
+import repository from "../repositories/prisma.connection";
 
 interface TweetWithRelationsUser extends TweetDB {
   user: UsuarioDB;
@@ -26,9 +26,9 @@ export class TweetService {
     };
   }
 
-  public async listarTodos(user: string | undefined): Promise<ResponseDTO> {
+  public async listarTodos(userId: string | undefined): Promise<ResponseDTO> {
     const tweets = await repository.tweet.findMany({
-      where: { userId: user },
+      where: { userId: userId },
       include: { user: true },
     });
 
@@ -47,9 +47,9 @@ export class TweetService {
         where: { tweetId: tweet.id },
       });
 
-      if (user) {
+      if (userId) {
         like = await repository.like.findFirst({
-          where: { AND: [{ userId: user }, { tweetId: tweet.id }] },
+          where: { AND: [{ userId: userId }, { tweetId: tweet.id }] },
         });
       }
 
@@ -71,9 +71,9 @@ export class TweetService {
     };
   }
 
-  public async listarPorId(id: string): Promise<ResponseDTO> {
+  public async listarPorId(idTweet: string): Promise<ResponseDTO> {
     const tweetEncontrado = await repository.tweet.findFirst({
-      where: { id },
+      where: { id: idTweet },
       include: { user: true },
     });
 

@@ -1,7 +1,6 @@
 import { Router } from "express";
-import { Auth, CadastroTweet } from "../middlewares";
 import { TweetController } from "../controllers/tweet.controller";
-
+import { Auth, CadastroTweet } from "../middlewares";
 
 export function tweetRoutes() {
   const router = Router();
@@ -9,8 +8,8 @@ export function tweetRoutes() {
   const auth = new Auth();
   const controller = new TweetController();
 
-  router.post('/', [auth.validar, cadastroTweet.validar], controller.cadastrar)
-  router.get('/', [auth.validar], controller.listar)
+  router.post("/", [auth.validar, cadastroTweet.validar], controller.cadastrar);
+  router.get("/", [auth.validar], controller.listar);
 
   return router;
 }

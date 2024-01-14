@@ -5,10 +5,10 @@ export class LikeController {
   public async cadastrar(req: Request, res: Response) {
     try {
       const userId = req.usuario.id;
-      const { idTweet } = req.params;
+      const { tweetId } = req.params;
 
       const service = new LikeService();
-      const response = await service.cadastrar({ userId, id: idTweet });
+      const response = await service.cadastrar({ userId, id: tweetId });
 
       return res.status(response.code).json(response);
     } catch (error: any) {
@@ -22,7 +22,7 @@ export class LikeController {
 
   public async deletar(req: Request, res: Response) {
     try {
-      const { userId } = req.body;
+      const userId = req.usuario.id;
       const { id } = req.params;
 
       const service = new LikeService();

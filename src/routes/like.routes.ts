@@ -9,7 +9,7 @@ export function likeRoutes() {
   const verificarTweet = new VerificarTweet();
   const validarFormatoId = new ValidarFormatoId();
   router.post(
-    "/:idTweet",
+    "/:tweetId",
     [auth.validar, validarFormatoId.validar, verificarTweet.validar],
     controller.cadastrar
   );

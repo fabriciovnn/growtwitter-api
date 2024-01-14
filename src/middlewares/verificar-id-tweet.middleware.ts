@@ -3,10 +3,10 @@ import { TweetService } from "../services";
 
 export class VerificarTweet {
   public async validar(req: Request, res: Response, next: NextFunction) {
-    const { idTweet } = req.params;
+    const { tweetId } = req.params;
 
     const service = new TweetService();
-    const response = await service.listarPorId(idTweet);
+    const response = await service.listarPorId(tweetId);
 
     if (!response.code) {
       return res.status(response.code).json(response);

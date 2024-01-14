@@ -1,24 +1,23 @@
-import { Like as LikeDB} from "@prisma/client";
+import { Like as LikeDB } from "@prisma/client";
 import { CadastrarLikeDTO, DeletarLikeDTO, ResponseDTO } from "../dtos";
-import repository from "../repositories/prisma.connection";
 import { Like } from "../models";
-
+import repository from "../repositories/prisma.connection";
 
 export class LikeService {
   public async cadastrar(dados: CadastrarLikeDTO): Promise<ResponseDTO> {
     const likeExiste = await repository.like.findFirst({
-      where: { 
-        userId: dados.userId, 
-        tweetId: dados.id
+      where: {
+        userId: dados.userId,
+        tweetId: dados.id,
       },
     });
 
-    if(likeExiste) {
+    if (likeExiste) {
       return {
         code: 400,
         ok: false,
-        mensagem: 'Registro de Like Já Existe'
-      }
+        mensagem: "Registro de Like Já Existe",
+      };
     }
 
     const novoLike = await repository.like.create({
@@ -31,9 +30,9 @@ export class LikeService {
     return {
       code: 201,
       ok: true,
-      mensagem: 'Like cadastrado com sucesso',
+      mensagem: "Like cadastrado com sucesso",
       dados: this.mapToModel(novoLike),
-    }
+    };
   }
 
   public async deletar(dados: DeletarLikeDTO): Promise<ResponseDTO> {
@@ -47,15 +46,17 @@ export class LikeService {
     return {
       code: 200,
       ok: true,
-      mensagem: 'Like excluido com sucesso',
+      mensagem: "Like excluido com sucesso",
       dados: this.mapToModel(likeExcluido),
-    }
+    };
   }
 
   private mapToModel(like: LikeDB): Like {
-    return new Like(like.id, like.userId, like.tweetId);
+    return new Like(
+      like.id,
+      like.userId,
+      like.tweetId ?? undefined,
+      like.retweetId ?? undefined
+    );
   }
 }
-
-// rota POST /likes/:idTweet - req.body.idUser
-// rota DELETE /likes/:idTweet - req.body.idUser

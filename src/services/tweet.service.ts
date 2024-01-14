@@ -71,9 +71,9 @@ export class TweetService {
     };
   }
 
-  public async listarPorId(idTweet: string): Promise<ResponseDTO> {
+  public async listarPorId(tweetId: string): Promise<ResponseDTO> {
     const tweetEncontrado = await repository.tweet.findFirst({
-      where: { id: idTweet },
+      where: { id: tweetId },
       include: { user: true },
     });
 

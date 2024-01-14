@@ -2,9 +2,9 @@ import { NextFunction, Request, Response } from "express";
 
 export class ValidarFormatoId {
   public async validar(req: Request, res: Response, next: NextFunction) {
-    const { idTweet } = req.params;
+    const { tweetId } = req.params;
 
-    if (idTweet.length !== 36) {
+    if (tweetId.length !== 36) {
       return res.status(400).json({
         code: 400,
         ok: false,

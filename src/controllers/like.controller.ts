@@ -8,7 +8,7 @@ export class LikeController {
       const { tweetId } = req.params;
 
       const service = new LikeService();
-      const response = await service.cadastrar({ userId, id: tweetId });
+      const response = await service.cadastrar({ userId, tweetId });
 
       return res.status(response.code).json(response);
     } catch (error: any) {

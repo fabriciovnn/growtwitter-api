@@ -1,4 +1,4 @@
 export interface DeletarLikeDTO {
-  userId: string,
-  id: string,
+  userId: string;
+  id: string;
 }

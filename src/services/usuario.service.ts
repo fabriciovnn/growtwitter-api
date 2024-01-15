@@ -1,9 +1,13 @@
-import { Usuario as UsuarioDB } from "@prisma/client";
+import { Follower as FollowerDB, Usuario as UsuarioDB } from "@prisma/client";
 import { BcryptAdapter, JWTAdapter } from "../adapters";
 import { CadastrarUsuarioDTO, LogarUsuarioDTO, ResponseDTO } from "../dtos";
 import { envs } from "../envs";
-import { Usuario } from "../models";
+import { Follower, Usuario } from "../models";
 import repository from "../repositories/prisma.connection";
+
+interface UserWithRelationFollowers extends UsuarioDB {
+  followers: FollowerDB[];
+}
 
 export class UsuarioService {
   public async cadastrar(dados: CadastrarUsuarioDTO): Promise<ResponseDTO> {
@@ -79,6 +83,28 @@ export class UsuarioService {
     };
   }
 
+  public async listarPorId(id: string) {
+    const userEncontrado = await repository.usuario.findFirst({
+      where: { id: id },
+      include: { followers: true },
+    });
+
+    if (!userEncontrado) {
+      return {
+        code: 404,
+        ok: false,
+        mensagem: "Usuario não encontrado",
+      };
+    }
+
+    return {
+      code: 200,
+      ok: true,
+      mensagem: "Usuario encontrado com sucesso",
+      dados: this.mapToModelWithFollowers(userEncontrado),
+    };
+  }
+
   private mapToModel(usuarioDB: UsuarioDB): Usuario {
     return new Usuario(
       usuarioDB.id,
@@ -88,5 +114,28 @@ export class UsuarioService {
       usuarioDB.password,
       usuarioDB.imgUrl || undefined
     );
+  }
+
+  private mapToModelWithFollowers(usuarioDB: UserWithRelationFollowers) {
+    const user = new Usuario(
+      usuarioDB.id,
+      usuarioDB.name,
+      usuarioDB.email,
+      usuarioDB.username,
+      usuarioDB.password,
+      usuarioDB.imgUrl || undefined
+    );
+
+    const followers: Follower[] = [];
+    usuarioDB.followers.forEach((f) => {
+      const follower = new Follower(f.id, f.userId, f.followerId);
+
+      followers.unshift(follower);
+    });
+
+    return {
+      ...user.toJSON(),
+      followers: followers,
+    };
   }
 }

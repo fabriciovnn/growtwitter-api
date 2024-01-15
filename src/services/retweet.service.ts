@@ -1,5 +1,6 @@
 import { Retweet as RetweetDB, Tweet as TweetDB } from "@prisma/client";
 import { CadastrarRetweetDTO, ResponseDTO } from "../dtos";
+import { Retweet, Tweet } from "../models";
 import repository from "../repositories/prisma.connection";
 
 interface RetweetWithRelationTweet extends RetweetDB {
@@ -23,7 +24,7 @@ export class RetweetService {
     const newRetweet = await repository.retweet.create({
       data: {
         content: dados.content,
-        type: dados.tweetId,
+        type: dados.type,
         userId: dados.userId,
         tweetId: dados.tweetId,
       },
@@ -34,11 +35,26 @@ export class RetweetService {
       code: 201,
       ok: true,
       mensagem: "Retweet cadastrado com sucesso",
-      dados: "",
+      dados: this.mapToModel(newRetweet),
     };
   }
 
   private mapToModel(retweetDB: RetweetWithRelationTweet) {
-    //models
+    const tweet = new Tweet(
+      retweetDB.tweet.id,
+      retweetDB.tweet.content,
+      retweetDB.tweet.type,
+      retweetDB.tweet.userId
+    );
+
+    const retweet = new Retweet(
+      retweetDB.id,
+      retweetDB.content,
+      retweetDB.type,
+      retweetDB.userId,
+      retweetDB.tweetId
+    );
+
+    return { ...retweet.toJSON(), tweet: tweet.toJSON() };
   }
 }

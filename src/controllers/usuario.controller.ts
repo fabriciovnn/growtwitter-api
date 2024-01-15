@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TweetService, UsuarioService } from "../services";
+import { UsuarioService } from "../services";
 
 export class UsuarioController {
   public async create(req: Request, res: Response) {
@@ -31,6 +31,22 @@ export class UsuarioController {
       const service = new UsuarioService();
 
       const response = await service.login({ email, password });
+
+      return res.status(response.code).json(response);
+    } catch (error: any) {
+      return res.status(500).json({
+        code: 500,
+        ok: false,
+        mensagem: error.toString(),
+      });
+    }
+  }
+
+  public async listarPorId(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const service = new UsuarioService();
+      const response = await service.listarPorId(id);
 
       return res.status(response.code).json(response);
     } catch (error: any) {

@@ -1,8 +1,8 @@
-POST http://localhost:8080/tweets HTTP/1.1
+POST http://localhost:8080/retweets/cca420e0-8ba0-4a0f-8a0a-53a7f955c35d HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFlMTA0OWJlLWFlN2YtNDdjNi05NmQyLTcyYWVlZmJlNzM4MSIsIm5hbWUiOiJ0ZXN0ZTMiLCJlbWFpbCI6InRlc3RlM0B0ZXN0ZS5jb20iLCJ1c2VybmFtZSI6InRlc3RlMyIsImlhdCI6MTcwNTI4OTU3OSwiZXhwIjoxNzA1MzE4Mzc5fQ.fUeSFx1jBlT2YL0C9Doqc2AkDSMWejyf1WI5IkDGZsk
 
 {
-    "content": "Primeiro Tweet",
-    "type": "T"
+    "content": "Retweet ao primeiro tweet",
+    "type": "R"
 }

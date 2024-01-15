@@ -1,12 +1,18 @@
 import { Router } from "express";
 import { LikeController } from "../controllers";
-import { Auth, ValidarFormatoId, VerificarTweet } from "../middlewares";
+import {
+  Auth,
+  ValidarFormatoId,
+  VerificarLike,
+  VerificarTweet,
+} from "../middlewares";
 
 export function likeRoutes() {
   const router = Router();
   const controller = new LikeController();
   const auth = new Auth();
   const verificarTweet = new VerificarTweet();
+  const verificarLike = new VerificarLike();
   const validarFormatoId = new ValidarFormatoId();
   router.post(
     "/:tweetId",
@@ -15,7 +21,7 @@ export function likeRoutes() {
   );
   router.delete(
     "/:id",
-    [auth.validar, validarFormatoId.validar],
+    [auth.validar, validarFormatoId.validar, verificarLike.validar],
     controller.deletar
   );
 

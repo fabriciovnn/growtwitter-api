@@ -8,7 +8,7 @@ export class LikeService {
     const likeExiste = await repository.like.findFirst({
       where: {
         userId: dados.userId,
-        tweetId: dados.id,
+        tweetId: dados.tweetId,
       },
     });
 
@@ -23,7 +23,7 @@ export class LikeService {
     const novoLike = await repository.like.create({
       data: {
         userId: dados.userId,
-        tweetId: dados.id,
+        tweetId: dados.tweetId,
       },
     });
 
@@ -32,6 +32,27 @@ export class LikeService {
       ok: true,
       mensagem: "Like cadastrado com sucesso",
       dados: this.mapToModel(novoLike),
+    };
+  }
+
+  public async listarPorId(dados: DeletarLikeDTO): Promise<ResponseDTO> {
+    const likeEncontrado = await repository.like.findFirst({
+      where: { id: dados.id, userId: dados.userId },
+    });
+
+    if (!likeEncontrado) {
+      return {
+        code: 404,
+        ok: false,
+        mensagem: "Registro de like não encontrado",
+      };
+    }
+
+    return {
+      code: 200,
+      ok: true,
+      mensagem: "Registro de Like encontrado com sucesso",
+      dados: this.mapToModel(likeEncontrado),
     };
   }
 

@@ -1,10 +1,15 @@
-import { Tweet as TweetDB, Usuario as UsuarioDB } from "@prisma/client";
+import {
+  Retweet as RetweetDB,
+  Tweet as TweetDB,
+  Usuario as UsuarioDB,
+} from "@prisma/client";
 import { CadastrarTweetDTO, ResponseDTO } from "../dtos";
-import { Tweet, Usuario } from "../models";
+import { Retweet, Tweet, Usuario } from "../models";
 import repository from "../repositories/prisma.connection";
 
 interface TweetWithRelationsUser extends TweetDB {
   user: UsuarioDB;
+  retweets: RetweetDB[];
 }
 
 export class TweetService {
@@ -15,7 +20,7 @@ export class TweetService {
         type: dados.type,
         userId: dados.userId,
       },
-      include: { user: true },
+      include: { user: true, retweets: true },
     });
 
     return {
@@ -29,7 +34,7 @@ export class TweetService {
   public async listarTodos(userId: string | undefined): Promise<ResponseDTO> {
     const tweets = await repository.tweet.findMany({
       where: { userId: userId },
-      include: { user: true },
+      include: { user: true, retweets: true },
     });
 
     if (!tweets.length) {
@@ -74,7 +79,7 @@ export class TweetService {
   public async listarPorId(tweetId: string): Promise<ResponseDTO> {
     const tweetEncontrado = await repository.tweet.findFirst({
       where: { id: tweetId },
-      include: { user: true },
+      include: { user: true, retweets: true },
     });
 
     if (!tweetEncontrado) {
@@ -108,6 +113,18 @@ export class TweetService {
       tweetDB.type,
       tweetDB.userId
     );
-    return { ...tweet.toJSON(), user: user.toJSON() };
+
+    const retweets: Retweet[] = [];
+    tweetDB.retweets.forEach(async (r) => {
+      const retweet = new Retweet(r.id, r.content, r.type, r.userId, r.tweetId);
+
+      retweets.unshift(retweet);
+    });
+
+    return {
+      ...tweet.toJSON(),
+      user: user.toJSON(),
+      retweets: retweets,
+    };
   }
 }

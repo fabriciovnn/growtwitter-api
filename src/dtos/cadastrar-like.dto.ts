@@ -1,4 +1,4 @@
 export interface CadastrarLikeDTO {
-  userId: string,
-  id: string,
+  userId: string;
+  tweetId: string;
 }

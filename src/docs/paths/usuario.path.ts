@@ -142,7 +142,7 @@ export const usuariosPath = {
 
 export const usuariosLoginPath = {
   post: {
-    tags: ["Login Usuarios"],
+    tags: ["Usuarios"],
     summary: "Endpoint para logar um usuário cadastrado",
     requestBody: {
       content: {
@@ -224,4 +224,71 @@ export const usuariosLoginPath = {
   },
 };
 
-export const usuariosWithIdPath = {};
+export const usuariosWithIdPath = {
+  get: {
+    tags: ["Usuarios"],
+    summary: "Endpoint para buscar um usuario por ID",
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    parameters: [
+      {
+        name: "id",
+        in: "path",
+        description: "ID do usuario buscado",
+        required: true,
+        schema: {
+          type: "string",
+          format: "uuid",
+        },
+      },
+    ],
+    responses: {
+      200: {
+        description: "Sucesso",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                code: {
+                  type: "integer",
+                  format: "int32",
+                  summary: "Status code conforme padrão REST",
+                  example: 200,
+                },
+                ok: {
+                  type: "boolean",
+                  summary: "Indica se a requisição deu certo ou não",
+                  example: true,
+                },
+                mensagem: {
+                  type: "string",
+                  summary: "Mensagem amigável para mostrar ao usuário",
+                  example: "Usuario encontrado com sucesso!",
+                },
+                dados: {
+                  $ref: "#/schemas/usuario",
+                },
+              },
+            },
+          },
+        },
+      },
+      400: {
+        $ref: "#/components/badRequest",
+      },
+      401: {
+        $ref: "#/components/unauthorized",
+      },
+      404: {
+        $ref: "#/components/notFound",
+      },
+      500: {
+        $ref: "#/components/serverError",
+      },
+    },
+  },
+};

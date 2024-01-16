@@ -140,6 +140,88 @@ export const usuariosPath = {
   },
 };
 
-export const usuariosLoginPath = {};
+export const usuariosLoginPath = {
+  post: {
+    tags: ["Login Usuarios"],
+    summary: "Endpoint para logar um usuário cadastrado",
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              email: {
+                type: "string",
+                format: "email",
+                summary:
+                  "E-mail do usuário que será utilizado para acessar a aplicação",
+                example: "joao@teste.com",
+              },
+              password: {
+                type: "string",
+                summary:
+                  "Senha do Usuário que será utilizada para acessar a aplicação",
+              },
+            },
+            required: ["email", "password"],
+          },
+        },
+      },
+    },
+    responses: {
+      201: {
+        description: "Sucesso",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                code: {
+                  type: "integer",
+                  format: "int32",
+                  summary: "Status code conforme padrão REST",
+                  example: 201,
+                },
+                ok: {
+                  type: "boolean",
+                  summary: "Indica se a requisição deu certo ou não",
+                  example: true,
+                },
+                mensagem: {
+                  type: "string",
+                  summary: "Mensagem amigável para mostrar ao usuário",
+                  example: "Usuário logado com sucesso!",
+                },
+                dados: {
+                  type: "object",
+                  properties: {
+                    token: {
+                      type: "string",
+                      format: "JWT",
+                      summary:
+                        "Token de autorização gerado a partir dos dados do aluno logado",
+                      example:
+                        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+                    },
+                    user: {
+                      $ref: "#/schemas/usuario",
+                    },
+                  },
+                },
+              },
+              required: ["code", "ok", "mensagem", "dados"],
+            },
+          },
+        },
+      },
+      400: {
+        $ref: "#/components/badRequest",
+      },
+      500: {
+        $ref: "#/components/serverError",
+      },
+    },
+  },
+};
 
 export const usuariosWithIdPath = {};

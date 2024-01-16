@@ -5,7 +5,7 @@ import {
   serverError,
   unauthorized,
 } from "./components";
-import { usuariosPath } from "./paths";
+import { usuariosLoginPath, usuariosPath } from "./paths";
 import { error, usuarioSchema } from "./schemas";
 
 const docs = {
@@ -25,7 +25,7 @@ const docs = {
   ],
   paths: {
     "/usuarios": usuariosPath,
-    "/usuarios/login": {},
+    "/usuarios/login": usuariosLoginPath,
     "/usuarios/{id}": {},
     "/tweets": {},
     "/likes/{tweetId}": {},

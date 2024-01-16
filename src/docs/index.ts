@@ -5,8 +5,13 @@ import {
   serverError,
   unauthorized,
 } from "./components";
-import { usuariosLoginPath, usuariosPath, usuariosWithIdPath } from "./paths";
-import { error, usuarioSchema } from "./schemas";
+import {
+  tweetsPath,
+  usuariosLoginPath,
+  usuariosPath,
+  usuariosWithIdPath,
+} from "./paths";
+import { error, tweetSchema, usuarioSchema } from "./schemas";
 
 const docs = {
   openapi: "3.0.0",
@@ -27,7 +32,7 @@ const docs = {
     "/usuarios": usuariosPath,
     "/usuarios/login": usuariosLoginPath,
     "/usuarios/{id}": usuariosWithIdPath,
-    "/tweets": {},
+    "/tweets": tweetsPath,
     "/likes/{tweetId}": {},
     "/likes/{id}": {},
     "/retweets/{tweetId}": {},
@@ -44,6 +49,7 @@ const docs = {
   schemas: {
     error: error,
     usuario: usuarioSchema,
+    tweet: tweetSchema,
   },
 };
 

@@ -1,14 +1,9 @@
-import {
-  Replie as ReplieDB,
-  Tweet as TweetDB,
-  Usuario as UsuarioDB,
-} from "@prisma/client";
+import { Replie as ReplieDB, Tweet as TweetDB } from "@prisma/client";
 import { CadastrarTweetDTO, ResponseDTO } from "../dtos";
-import { Replie, Tweet, Usuario } from "../models";
+import { Replie, Tweet } from "../models";
 import repository from "../repositories/prisma.connection";
 
-interface TweetWithRelationsUser extends TweetDB {
-  user: UsuarioDB;
+interface TweetWithRelationReplies extends TweetDB {
   replies: ReplieDB[];
 }
 
@@ -79,7 +74,7 @@ export class TweetService {
   public async listarPorId(tweetId: string): Promise<ResponseDTO> {
     const tweetEncontrado = await repository.tweet.findFirst({
       where: { id: tweetId },
-      include: { user: true, replies: true },
+      include: { replies: true },
     });
 
     if (!tweetEncontrado) {
@@ -98,15 +93,7 @@ export class TweetService {
     };
   }
 
-  private mapToModel(tweetDB: TweetWithRelationsUser) {
-    const user = new Usuario(
-      tweetDB.user.id,
-      tweetDB.user.name,
-      tweetDB.user.email,
-      tweetDB.user.username,
-      tweetDB.user.password,
-      tweetDB.user.imgUrl || undefined
-    );
+  private mapToModel(tweetDB: TweetWithRelationReplies) {
     const tweet = new Tweet(
       tweetDB.id,
       tweetDB.content,
@@ -123,7 +110,6 @@ export class TweetService {
 
     return {
       ...tweet.toJSON(),
-      user: user.toJSON(),
       replies: replies,
     };
   }

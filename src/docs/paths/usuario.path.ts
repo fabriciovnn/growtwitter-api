@@ -92,7 +92,38 @@ export const usuariosPath = {
       },
     ],
     responses: {
-      200: {},
+      200: {
+        description: "Sucesso",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                code: {
+                  type: "integer",
+                  format: "int32",
+                  summary: "Status code conforme padrão REST",
+                  example: 200,
+                },
+                ok: {
+                  type: "boolean",
+                  summary: "Indica se a requisição deu certo ou não",
+                  example: true,
+                },
+                mensagem: {
+                  type: "string",
+                  summary: "Mensagem amigável para mostrar ao usuário",
+                  example: "Usuário cadastrado com sucesso!",
+                },
+                dados: {
+                  $ref: "#/schemas/usuario",
+                },
+              },
+              required: ["code", "ok", "mensagem", "dados"],
+            },
+          },
+        },
+      },
       400: {
         $ref: "#/components/badRequest",
       },

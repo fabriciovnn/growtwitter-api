@@ -77,7 +77,7 @@ export class LikeService {
       like.id,
       like.userId,
       like.tweetId ?? undefined,
-      like.retweetId ?? undefined
+      like.replieId ?? undefined
     );
   }
 }

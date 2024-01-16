@@ -1,10 +1,12 @@
 import cors from "cors";
 import express from "express";
+import { serve, setup } from "swagger-ui-express";
+import docs from "./docs";
 import { envs } from "./envs";
 import {
   followerRoutes,
   likeRoutes,
-  retweetRoutes,
+  repliesRoutes,
   tweetRoutes,
   usuarioRoutes,
 } from "./routes";
@@ -18,8 +20,9 @@ app.use(cors());
 app.use("/usuarios", usuarioRoutes());
 app.use("/tweets", tweetRoutes());
 app.use("/likes", likeRoutes());
-app.use("/retweets", retweetRoutes());
+app.use("/replies", repliesRoutes());
 app.use("/followers", followerRoutes());
+app.use("/docs", serve, setup(docs));
 
 app.listen(envs.PORT, () => console.log(`Server running on port ${envs.PORT}`));
 app.get("/", (_, res) => res.status(200).json({ ok: true }));

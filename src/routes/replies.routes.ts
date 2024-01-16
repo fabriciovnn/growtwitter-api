@@ -1,17 +1,17 @@
 import { Router } from "express";
-import { RetweetController } from "../controllers";
+import { ReplieController } from "../controllers";
 import {
   Auth,
-  CadastroRetweet,
+  CadastroReplie,
   ValidarFormatoId,
   VerificarTweet,
 } from "../middlewares";
 
-export function retweetRoutes() {
+export function repliesRoutes() {
   const router = Router();
   const auth = new Auth();
-  const controller = new RetweetController();
-  const cadastroRetweet = new CadastroRetweet();
+  const controller = new ReplieController();
+  const cadastroReplie = new CadastroReplie();
   const verificarTweet = new VerificarTweet();
   const formatoId = new ValidarFormatoId();
 
@@ -20,7 +20,7 @@ export function retweetRoutes() {
     [
       auth.validar,
       formatoId.validar,
-      cadastroRetweet.validar,
+      cadastroReplie.validar,
       verificarTweet.validar,
     ],
     controller.cadastrar

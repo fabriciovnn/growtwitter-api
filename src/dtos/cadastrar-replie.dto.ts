@@ -1,5 +1,5 @@
 import { CadastrarTweetDTO } from "./cadastrar-tweet.dto";
 
-export interface CadastrarRetweetDTO extends CadastrarTweetDTO {
+export interface CadastrarReplieDTO extends CadastrarTweetDTO {
   tweetId: string;
 }

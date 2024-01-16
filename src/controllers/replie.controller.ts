@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
-import { RetweetService } from "../services";
+import { ReplieService } from "../services";
 
-export class RetweetController {
+export class ReplieController {
   public async cadastrar(req: Request, res: Response) {
     try {
       const { content, type } = req.body;
       const userId = req.usuario.id;
       const { tweetId } = req.params;
 
-      const service = new RetweetService();
+      const service = new ReplieService();
       const response = await service.cadastrar({
         content,
         type,

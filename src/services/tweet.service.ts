@@ -1,15 +1,15 @@
 import {
-  Retweet as RetweetDB,
+  Replie as ReplieDB,
   Tweet as TweetDB,
   Usuario as UsuarioDB,
 } from "@prisma/client";
 import { CadastrarTweetDTO, ResponseDTO } from "../dtos";
-import { Retweet, Tweet, Usuario } from "../models";
+import { Replie, Tweet, Usuario } from "../models";
 import repository from "../repositories/prisma.connection";
 
 interface TweetWithRelationsUser extends TweetDB {
   user: UsuarioDB;
-  retweets: RetweetDB[];
+  replies: ReplieDB[];
 }
 
 export class TweetService {
@@ -20,7 +20,7 @@ export class TweetService {
         type: dados.type,
         userId: dados.userId,
       },
-      include: { user: true, retweets: true },
+      include: { user: true, replies: true },
     });
 
     return {
@@ -34,7 +34,7 @@ export class TweetService {
   public async listarTodos(userId: string | undefined): Promise<ResponseDTO> {
     const tweets = await repository.tweet.findMany({
       where: { userId: userId },
-      include: { user: true, retweets: true },
+      include: { user: true, replies: true },
     });
 
     if (!tweets.length) {
@@ -79,7 +79,7 @@ export class TweetService {
   public async listarPorId(tweetId: string): Promise<ResponseDTO> {
     const tweetEncontrado = await repository.tweet.findFirst({
       where: { id: tweetId },
-      include: { user: true, retweets: true },
+      include: { user: true, replies: true },
     });
 
     if (!tweetEncontrado) {
@@ -114,17 +114,17 @@ export class TweetService {
       tweetDB.userId
     );
 
-    const retweets: Retweet[] = [];
-    tweetDB.retweets.forEach(async (r) => {
-      const retweet = new Retweet(r.id, r.content, r.type, r.userId, r.tweetId);
+    const replies: Replie[] = [];
+    tweetDB.replies.forEach(async (r) => {
+      const replie = new Replie(r.id, r.content, r.type, r.userId, r.tweetId);
 
-      retweets.unshift(retweet);
+      replies.unshift(replie);
     });
 
     return {
       ...tweet.toJSON(),
       user: user.toJSON(),
-      retweets: retweets,
+      replies: replies,
     };
   }
 }

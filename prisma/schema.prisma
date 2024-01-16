@@ -19,11 +19,11 @@ model Usuario {
 
   tweets Tweet[]
   likes Like[]
-  retweets Retweet[]
+  replies Replie[]
   followers Follower[] @relation("userId")
   follow Follower[] @relation("followerId")
 
-  @@map("usuario")
+  @@map("usuarios")
 }
 
 model Tweet {
@@ -37,9 +37,9 @@ model Tweet {
   user Usuario @relation(fields: [userId], references: [id])
 
   likes Like[]
-  retweets Retweet[]
+  replies Replie[]
 
-  @@map("tweet")
+  @@map("tweets")
 }
 
 model Like {
@@ -53,14 +53,14 @@ model Like {
   tweetId String? @db.Uuid @map("tweet_id")
   tweet Tweet? @relation(fields: [tweetId], references: [id]) 
 
-  retweetId String? @db.Uuid @map("retweet_id")
-  retweet Retweet? @relation(fields: [retweetId], references: [id])
+  replieId String? @db.Uuid @map("replie_id")
+  replie Replie? @relation(fields: [replieId], references: [id])
 
 
-  @@map("like")
+  @@map("likes")
 }
 
-model Retweet {
+model Replie {
   id String @id @default(uuid()) @db.Uuid
   content String @db.VarChar(400)
   type String @db.Char(1)
@@ -75,7 +75,7 @@ model Retweet {
 
   likes Like[]
 
-  @@map("retweet")
+  @@map("replies")
 }
 
 model Follower {
@@ -89,5 +89,5 @@ model Follower {
   followerId String @db.Uuid @map("follower_id")
   follower Usuario @relation("followerId" ,fields: [followerId], references: [id])
 
-  @@map("follower")
+  @@map("followers")
 }

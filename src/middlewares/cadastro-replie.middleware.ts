@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 
-export class CadastroRetweet {
+export class CadastroReplie {
   public validar(req: Request, res: Response, next: NextFunction) {
     const { content, type } = req.body;
 
@@ -21,7 +21,7 @@ export class CadastroRetweet {
       return res.status(400).json({
         code: 400,
         ok: false,
-        mensagem: 'Type precisa ser "R" para criar um retweet',
+        mensagem: 'Type precisa ser "R" para criar um replie',
       });
     }
 

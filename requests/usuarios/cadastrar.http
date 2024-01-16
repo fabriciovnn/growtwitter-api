@@ -2,9 +2,9 @@ POST http://localhost:8080/usuarios HTTP/1.1
 content-type: application/json
 
 {
-  "name": "teste3",
-  "email": "teste3@teste.com",
-  "username": "teste3",
+  "name": "teste1",
+  "email": "teste1@teste.com",
+  "username": "teste1",
   "password": "12345678",
   "imgURl": "https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/5X/c/f/6/5/cf653697f1d97312fcb00674cd540c8d379a35ad.jpeg"
 }

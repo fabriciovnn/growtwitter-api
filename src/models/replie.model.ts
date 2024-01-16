@@ -1,4 +1,4 @@
-export class Retweet {
+export class Replie {
   constructor(
     private _id: string,
     private _content: string,

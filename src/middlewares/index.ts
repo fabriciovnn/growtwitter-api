@@ -1,5 +1,5 @@
 export * from "./auth.middleware";
-export * from "./cadastro-retweet.middleware";
+export * from "./cadastro-replie.middleware";
 export * from "./cadastro-tweet.middleware";
 export * from "./cadastro-usuario.middleware";
 export * from "./login.middleware";

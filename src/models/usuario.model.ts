@@ -1,10 +1,4 @@
-import { Like } from "./like.model";
-import { Tweet } from "./tweet.model";
-
 export class Usuario {
-  private _tweets: Tweet[];
-  private _likes: Like[];
-
   constructor(
     private _id: string,
     private _name: string,
@@ -12,10 +6,7 @@ export class Usuario {
     private _username: string,
     private _password: string,
     private _imgUrl?: string
-  ) {
-    this._tweets = [];
-    this._likes = [];
-  }
+  ) {}
 
   public get id(): string {
     return this._id;
@@ -35,14 +26,6 @@ export class Usuario {
 
   public get password(): string {
     return this._password;
-  }
-
-  public get tweets(): Tweet[] {
-    return this._tweets;
-  }
-
-  public get likes(): Like[] {
-    return this._likes;
   }
 
   public get imgUrl(): string | undefined {

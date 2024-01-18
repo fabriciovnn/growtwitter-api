@@ -60,4 +60,8 @@ describe("Testes para o módulo Usuário", () => {
       });
     });
   });
+
+  describe("Login", () => {});
+
+  describe("listarPorId", () => {});
 });

@@ -50,7 +50,7 @@ export class UsuarioService {
   }
 
   public async login(dados: LogarUsuarioDTO): Promise<ResponseDTO> {
-    const usuarioEncontrado = await repository.usuario.findFirst({
+    const usuarioEncontrado = await repository.usuario.findUnique({
       where: { email: dados.email },
     });
 

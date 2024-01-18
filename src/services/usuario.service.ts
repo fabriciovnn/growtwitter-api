@@ -5,8 +5,13 @@ import { envs } from "../envs";
 import { Follower, Usuario } from "../models";
 import repository from "../repositories/prisma.connection";
 
-interface UserWithRelationFollowers extends UsuarioDB {
-  followers: FollowerDB[];
+interface UserWithRelationFollowers {
+  id: string;
+  name: string;
+  email: string;
+  username: string;
+  imgUrl: string | undefined;
+  followers: Follower[];
 }
 
 export class UsuarioService {
@@ -40,7 +45,7 @@ export class UsuarioService {
       code: 201,
       ok: true,
       mensagem: "Usuário cadastrado!",
-      dados: this.mapToModel(usuarioDB),
+      dados: this.mapToModel(usuarioDB).toJSON(),
     };
   }
 
@@ -116,7 +121,9 @@ export class UsuarioService {
     );
   }
 
-  private mapToModelWithFollowers(usuarioDB: UserWithRelationFollowers) {
+  private mapToModelWithFollowers(
+    usuarioDB: UsuarioDB & { followers: FollowerDB[] }
+  ): UserWithRelationFollowers {
     const user = new Usuario(
       usuarioDB.id,
       usuarioDB.name,

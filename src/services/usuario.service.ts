@@ -5,7 +5,7 @@ import { envs } from "../envs";
 import { Follower, Usuario } from "../models";
 import repository from "../repositories/prisma.connection";
 
-interface UserWithRelationFollowers {
+export interface UserWithRelationFollowers {
   id: string;
   name: string;
   email: string;
@@ -89,7 +89,7 @@ export class UsuarioService {
   }
 
   public async listarPorId(id: string) {
-    const userEncontrado = await repository.usuario.findFirst({
+    const userEncontrado = await repository.usuario.findUnique({
       where: { id: id },
       include: { followers: true },
     });
@@ -134,7 +134,7 @@ export class UsuarioService {
     );
 
     const followers: Follower[] = [];
-    usuarioDB.followers.forEach((f) => {
+    usuarioDB.followers?.forEach((f) => {
       const follower = new Follower(f.id, f.userId, f.followerId);
 
       followers.unshift(follower);

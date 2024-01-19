@@ -150,5 +150,14 @@ describe("Testes para o módulo Usuário", () => {
     });
   });
 
-  describe("listarPorId", () => {});
+  describe("listarPorId", () => {
+    it("Deve retornar Usuario não encontrado quando não houver aluno pelo id informado", async () => {
+      const sut = createSut();
+      const result = await sut.listarPorId("any_wrong_id");
+
+      expect(result.code).toBe(404);
+      expect(result.ok).toBe(false);
+      expect(result).toHaveProperty("mensagem", "Usuario não encontrado");
+    });
+  });
 });

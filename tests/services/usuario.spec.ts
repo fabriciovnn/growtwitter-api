@@ -155,9 +155,41 @@ describe("Testes para o módulo Usuário", () => {
       const sut = createSut();
       const result = await sut.listarPorId("any_wrong_id");
 
+      expect(result).toBeDefined();
       expect(result.code).toBe(404);
       expect(result.ok).toBe(false);
       expect(result).toHaveProperty("mensagem", "Usuario não encontrado");
+    });
+
+    it("Deve rtornar objeto de sucesso quando encontrar aluno pelo id informado", async () => {
+      prismaMock.usuario.findUnique.mockResolvedValue({
+        id: "any_id",
+        name: "any_name",
+        email: "any_email",
+        username: "any_username",
+        password: "any_password",
+        imgUrl: "any_imgurl",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      const sut = createSut();
+      const result = await sut.listarPorId("any_id");
+
+      expect(result.code).toBe(200);
+      expect(result.ok).toBe(true);
+      expect(result).toHaveProperty(
+        "mensagem",
+        "Usuario encontrado com sucesso"
+      );
+      expect(result).toHaveProperty("dados");
+      expect(result.dados).toBeDefined();
+      expect(result.dados).toHaveProperty("id", "any_id");
+      expect(result.dados).toHaveProperty("email", "any_email");
+      expect(result.dados).toHaveProperty("name", "any_name");
+      expect(result.dados).toHaveProperty("username", "any_username");
+      expect(result.dados).toHaveProperty("imgUrl", "any_imgurl");
+      expect(result.dados).toHaveProperty("followers", []);
     });
   });
 });

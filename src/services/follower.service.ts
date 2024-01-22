@@ -34,7 +34,7 @@ export class FollowerService {
       code: 201,
       ok: true,
       mensagem: "Follow cadastrado com sucesso",
-      dados: this.mapToModel(novoFollow),
+      dados: this.mapToModel(novoFollow).toJSON(),
     };
   }
 
@@ -49,8 +49,8 @@ export class FollowerService {
     return {
       code: 200,
       ok: true,
-      mensagem: "Like excluido com sucesso",
-      dados: this.mapToModel(followerExcluido),
+      mensagem: "Follower excluido com sucesso",
+      dados: this.mapToModel(followerExcluido).toJSON(),
     };
   }
 
@@ -71,7 +71,7 @@ export class FollowerService {
       code: 200,
       ok: true,
       mensagem: "Registro de Follower encontrado com sucesso",
-      dados: this.mapToModel(followerEncontrado),
+      dados: this.mapToModel(followerEncontrado).toJSON(),
     };
   }
 

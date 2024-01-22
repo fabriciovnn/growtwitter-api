@@ -31,7 +31,7 @@ export class LikeService {
       code: 201,
       ok: true,
       mensagem: "Like cadastrado com sucesso",
-      dados: this.mapToModel(novoLike),
+      dados: this.mapToModel(novoLike).toJSON(),
     };
   }
 
@@ -68,7 +68,7 @@ export class LikeService {
       code: 200,
       ok: true,
       mensagem: "Like excluido com sucesso",
-      dados: this.mapToModel(likeExcluido),
+      dados: this.mapToModel(likeExcluido).toJSON(),
     };
   }
 

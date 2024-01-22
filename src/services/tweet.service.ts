@@ -15,7 +15,7 @@ export class TweetService {
         type: dados.type,
         userId: dados.userId,
       },
-      include: { user: true, replies: true },
+      include: { replies: true },
     });
 
     return {
@@ -29,10 +29,10 @@ export class TweetService {
   public async listarTodos(userId: string | undefined): Promise<ResponseDTO> {
     const tweets = await repository.tweet.findMany({
       where: { userId: userId },
-      include: { user: true, replies: true },
+      include: { replies: true },
     });
 
-    if (!tweets.length) {
+    if (!tweets) {
       return {
         code: 404,
         ok: false,
@@ -72,7 +72,7 @@ export class TweetService {
   }
 
   public async listarPorId(tweetId: string): Promise<ResponseDTO> {
-    const tweetEncontrado = await repository.tweet.findFirst({
+    const tweetEncontrado = await repository.tweet.findUnique({
       where: { id: tweetId },
       include: { replies: true },
     });
@@ -102,7 +102,7 @@ export class TweetService {
     );
 
     const replies: Replie[] = [];
-    tweetDB.replies.forEach(async (r) => {
+    tweetDB.replies?.forEach(async (r) => {
       const replie = new Replie(r.id, r.content, r.type, r.userId, r.tweetId);
 
       replies.unshift(replie);

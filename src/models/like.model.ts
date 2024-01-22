@@ -3,7 +3,7 @@ export class Like {
     private _id: string,
     private _userId: string,
     private _tweetId?: string,
-    private _replietId?: string
+    private _replieId?: string
   ) {}
 
   public get id(): string {
@@ -19,7 +19,7 @@ export class Like {
   }
 
   public get replieId(): string | undefined {
-    return this._replietId;
+    return this._replieId;
   }
 
   public toJSON() {
@@ -27,7 +27,7 @@ export class Like {
       id: this._id,
       userId: this._userId,
       tweetId: this._tweetId,
-      replieId: this.replieId,
+      replieId: this._replieId,
     };
   }
 }
